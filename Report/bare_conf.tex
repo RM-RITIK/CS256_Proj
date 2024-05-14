@@ -57,8 +57,11 @@
 % http://www.michaelshell.org/tex/testflow/
 
 
-
 \documentclass[conference]{IEEEtran}
+
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm, amsfonts, amssymb, amsxtra, amsopn}
+\usepackage{booktabs} 
 % Some Computer Society conferences also require the compsoc mode option,
 % but others use the standard conference format.
 %
@@ -327,17 +330,16 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Bare Demo of IEEEtran.cls\\ for IEEE Conferences}
+\title{Reddit Self-Post Classification}
 
 
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Michael Shell}
-\IEEEauthorblockA{School of Electrical and\\Computer Engineering\\
-Georgia Institute of Technology\\
-Atlanta, Georgia 30332--0250\\
-Email: http://www.michaelshell.org/contact.html}
+\author{\IEEEauthorblockN{Ritik Mehta}
+\IEEEauthorblockA{Department of Computer Science \\
+San Jose State Uninversity\\
+Email: ritik.mehta@sjsu.edu}
 \and
 \IEEEauthorblockN{Homer Simpson}
 \IEEEauthorblockA{Twentieth Century Fox\\
@@ -525,8 +527,154 @@ Subsubsection text here.
 \section{Background}
 
 \section{Methodology}
+In this section, we begin by presenting the dataset employed in our experiments, followed by an overview of our project's experimental design.
 
+\subsection{Dataset and Preprocessing}
+Our dataset is publicly available at~\cite{dataset}. It consists of over one million Reddit self-posts among 39 genres. Due to constraints on the computation power, we took 3000 samples from each genre to reduce the training time, and employed the following preprocessing techniques:
+\begin{itemize}
+    \item Text in the title, selftext, and genre was converted to lowercase.
+    \item Commas, periods, and text within and including angle brackets were removed from the title and selftext.
+    \item Question marks and exclamation points were wrapped in white space.
+    \item The title and selftext were concatenated to obtain the feature vectors and the corresponding genre was regarded as the target label.
+\end{itemize}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=90mm, height = 30mm]{Images/DataPreprocessing.png}
+\caption{Flow of Data}\label{fig:dataPreprocessing}
+\end{figure}
+
+\subsection{Word Embeddings}
+We used three popular techniques to generate word embeddings of concatenated strings obtained in the previous step:
+
+\begin{itemize}
+    \item \textbf{TF-IDF Vectorizer}: TF-IDF Vectorizer~\cite{tfidf} assigns each word in the document a weight based on Term Frequency (TF) and Inverse Document Frequency (IDF). Term Frequency measures how often a term appears in a document. The more often a term appears in a document, the higher its weight. Inverse Document Frequency (IDF) measures how important a term is within the entire corpus. Terms that appear frequently across many documents are given lower weights.
+    \item \textbf{Word2Vec}: Word2Vec~\cite{word2vec} transforms words into dense vectors within a high-dimensional space. These vectors encode the semantic meaning of words, enabling machines to comprehend relationships between them. When training Word2Vec on our own corpus, we set the \textit{vector\_size} to 300 and \textit{window} to 5. The first parameter specifies the dimensionality of the word vectors and the second parameter determines the context window size. 
+    \item \textbf{BERT}: BERT (Bidirectional Encoder Representations from Transformers)~\cite{devlin2019bert} is a natural language processing model developed by Google. It uses self-attention mechanisms to capture relationships between words in a sentence. Unlike traditional word embedding techniques like Word2Vec, BERT considers the context of each word in a sentence bidirectionally.
+\end{itemize}
+
+\subsection{Logistic Regression}
+We trained a logistic regression model~\cite{Komarek-2004-8925} with all three embeddings generated in the previous step. Since, Word2Vec and BERT embeddings are generated for a word, we took an average of all the word embeddings for each sample to get a single vector representation. As a result, we obtained a feature vector of length 300 corresponding to each data sample. For hyper-parameter tuning, we considered the following hyper-parameters:
+
+\begin{itemize}
+    \item \textbf{\textit{C}}: It is the inverse of regularization strength. Smaller values specify stronger regularization. Regularization helps prevent overfitting by adding a penalty term to the loss function. We test our logistic regression model with~$C: {0.01, 0.1, 1}$.
+    \item \textbf{\textit{solver}}: It is the algorithm to use in the optimization problem. Without going into much detail, we tested our logistic regression model with the following values of $solver: {'lbfgs', 'sag', 'saga'}$
+\end{itemize}
+
+\subsection{Random Forest}
+Random Forest was originally proposed in~\cite{randomforestorig}. 
+It comprises collections of decision trees. A decision tree is a basic supervised learning technique used for classification or prediction based on a tree-like structure. It consists of a root node, branches, internal nodes, and leaf nodes, and can be seen as a series of \texttt{if}-\texttt{else} statements. We trained a random forest model with all three embeddings, using the same feature vectors used for the logistic regression. The hyperparameter considered for our random forest model is as follows:
+\begin{itemize}
+    \item \textbf{\textit{max\_depth}}: It represents the maximum depth of a decision tree. We tested this hyperparameter with the following values: $max\_depth: {5, 7, 10}$
+    \item \textbf{\textit{n\_estimators}}: It represents the number of decision trees in the random forest. We tested this hyperparameter with the following values: $n\_estimator: {150, 200, 400}$
+\end{itemize}
+
+\subsection{Long Short-Term Memory (LSTM)}
+LSTM~\cite{lstm}, a recurrent neural network (RNN) architecture, addresses the vanishing gradient problem that impedes traditional RNNs from effectively learning long sequences. LSTMs are specifically designed to capture long-term dependencies in sequential data by maintaining a memory state over time.
+
+An LSTM comprises three gates to regulate the flow of information: the input gate, the forget gate, and the output gate. The input gate regulates the flow of new information into the memory cell, the forget gate determines which information should be discarded from the cell, and the output gate controle the exposure of the internal state. 
+
+Each of our LSTM model comprises of 64 memory units, and also consists of a Dropout Layer and a Dense Layer with softmax activation. In the Dropout Layer, 10\% of the input units will be randomly set to 0 during each training epoch.
+
+\subsection{LSTM-CNN}
+The LSTM-CNN model is a combination of LSTM and Convolutional Neural Network~\cite{cnn}. The training procedure of our LSTM model can be described as:
+\begin{itemize}
+    \item \textbf{Generating Embeddings (or Embeddings Layer)}: Unlike the three baseline models that we discussed above, we don't take an average of all the word embeddings in a data sample. We first calculate the median number of words present in each sample, which comes out to be~$69$. If the number of words in a data sample is less than the median length, we pad the data sample, and generate word embeddings corresponding to each word in a data sample. For example, in case of BERT, corresponding to each data sample, we get a feature vector of dimensions~$(69, 768)$.
+    \item \textbf{Convolutional Layer}: The feature vectors generated in the previous step are passed to the convolutional layer with ReLU activation function and 128 filters.
+    \item \textbf{\textit{Max pooling Layer}}: The output from the convolutional layer is passed to the max pooling layer with the pool size of 2.
+    \item \textbf{Spatial Dropout}: The next layer in our proposed model is a spatial dropout layer. Spatial dropout is a regularization technique employed to aid our model in generalization and to prevent overfitting. We apply a dropout rate of 0.2.
+    \item \textbf{LSTM}: The number of LSTM units are set to the embedding dimension. For example, the number of LSTM units in the LSTM layer of BERT-LSTM-CNN is 768. Both dropout and recurrent dropout rates are set to 0.2
+    \item \textbf{Dense}: This layer is fully connected, and it utilizes a softmax activation function to output the probability distribution across all classes.
+\end{itemize}
 \section{Results}
+In this section, we present the results obtained from the techniques discussed in the previous section.
+
+\subsection{Logistic Regression}
+Table~\ref{tab: lr_models} shows the accuracy of our Logistic Regression models. We observed that the Logistic Regression model provides best accuracy of 68.79\% using TF-IDF Vectors. The confusion matrix for same is shown in Figure~\ref{fig:lr}.
+
+\begin{table}[!htb]
+\centering
+\caption{Accuracy of Logistic Regression Models}
+\label{tab: lr_models}
+\begin{tabular}{c|c}\midrule\midrule
+Model & Accuracy\\ \midrule
+\textbf{TF-IDF + Logistic Regression} & \textbf{68.79\%} \\
+Word2Vec + Logistic Regression & 40.18\% \\
+BERT + Logistic Regression & 56.83\% \\ \midrule\midrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=70mm, height = 60mm]{Images/Logistic Regression.png}
+\caption{Confusion Matrix for TF-IDF + Logistic Regression}\label{fig:lr}
+\end{figure}
+
+\subsection{Random Forest}
+
+Table~\ref{tab: rf_models} shows the accuracy of our Random Forest models. We observed that the Random Forest model provides best accuracy of 45.58\% using TF-IDF Vectors. The confusion matrix for same is shown in Figure~\ref{fig:rf}.
+
+\begin{table}[!htb]
+\centering
+\caption{Accuracy of Random Forest Models}
+\label{tab: rf_models}
+\begin{tabular}{c|c}\midrule\midrule
+Model & Accuracy\\ \midrule
+\textbf{TF-IDF + Random Forest} & \textbf{45.58\%} \\
+Word2Vec + Random Forest & 27.14\% \\
+BERT + Random Forest & 42.36\% \\ \midrule\midrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=70mm, height = 60mm]{Images/Random Forest.png}
+\caption{Confusion Matrix for TF-IDF + Random Forest}\label{fig:rf}
+\end{figure}
+
+\subsection{Long Short-Term Memory (LSTM)}
+
+Table~\ref{tab: lstm_models} shows the accuracy of our LSTM models. We observed that the LSTM model provides best accuracy of 59.09\% using TF-IDF Vectors. The confusion matrix for same is shown in Figure~\ref{fig:lstm}.
+
+\begin{table}[!htb]
+\centering
+\caption{Accuracy of LSTM Models}
+\label{tab: lstm_models}
+\begin{tabular}{c|c}\midrule\midrule
+Model & Accuracy\\ \midrule
+\textbf{TF-IDF + LSTM} & \textbf{59.09\%} \\
+Word2Vec + LSTM & 37.02\% \\
+BERT + LSTM & 54.10\% \\ \midrule\midrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=70mm, height = 60mm]{Images/LSTM.png}
+\caption{Confusion Matrix for TF-IDF + LSTM}\label{fig:lstm}
+\end{figure}
+
+\subsection{LSTM-CNN}
+
+Table~\ref{tab: lstm_cnn_models} shows the accuracy of our LSTM-CNN models. We observed that the LSTM-CNN model provides best accuracy of 61.53\% using BERT embeddings. The confusion matrix for same is shown in Figure~\ref{fig:lstm_cnn}.
+
+\begin{table}[!htb]
+\centering
+\caption{Accuracy of LSTM-CNN Models}
+\label{tab: lstm_cnn_models}
+\begin{tabular}{c|c}\midrule\midrule
+Model & Accuracy\\ \midrule
+TF-IDF + LSTM-CNN & 59.51\% \\
+Word2Vec + LSTM-CNN & 47.21\% \\
+\textbf{BERT + LSTM-CNN} & \textbf{61.53}\% \\ \midrule\midrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=70mm, height = 60mm]{Images/LSTM-CNN.png}
+\caption{Confusion Matrix for TF-IDF + LSTM-CNN}\label{fig:lstm_cnn}
+\end{figure}
 
 \section{Discussion}
 
@@ -544,6 +692,9 @@ The conclusion goes here.
 
 
 The authors would like to thank...
+
+\bibliography{bib}
+\bibliographystyle{IEEEtran}
 
 
 
@@ -571,13 +722,6 @@ The authors would like to thank...
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
 
 
 
