@@ -526,6 +526,22 @@ Subsubsection text here.
 
 \section{Background}
 
+Text classification has become a fundamental task in natural language processing (NLP), driven by the exponential growth of textual data on the internet. Various machine learning and deep learning techniques have been developed to classify texts into predefined categories efficiently and accurately. This survey explores the evolution of text classification methodologies, comparing traditional approaches with modern deep learning models and evaluating their performance across different datasets and applications.
+
+Early text classification models relied on statistical and machine learning techniques, such as Naive Bayes (NB), k-Nearest Neighbors (k-NN), and Support Vector Machines (SVM). These models typically employed feature extraction methods like Term Frequency-Inverse Document Frequency (TF-IDF) to convert text into numerical representations suitable for classification.
+
+Naive Bayes classifiers, based on Bayes' theorem, are widely used for their simplicity and effectiveness in text classification tasks, including spam detection and sentiment analysis [1]. The k-NN algorithm, though intuitive, is computationally intensive and often impractical for large datasets [2]. SVM, on the other hand, constructs hyperplanes in a multidimensional space to separate different classes and has shown robust performance in many text classification tasks [3].
+
+The advent of deep learning has revolutionized text classification, enabling models to automatically learn feature representations from raw text data. Recurrent Neural Networks (RNNs) and their variants, such as Long Short-Term Memory (LSTM) networks, have been particularly effective for sequential data processing.
+
+LSTM networks address the limitations of traditional RNNs, such as the vanishing gradient problem, by incorporating memory cells that maintain long-term dependencies [4]. These models have achieved state-of-the-art results in various NLP tasks, including sentiment analysis, language modeling, and sequence-to-sequence predictions [5].
+
+Transformers, particularly the Bidirectional Encoder Representations from Transformers (BERT), have set new benchmarks in text classification. BERT leverages a bidirectional training approach and self-attention mechanisms to capture contextual information from both left and right contexts in a sentence, significantly improving the performance of text classification models on numerous datasets [6].
+
+BERT-based models, such as BERT4TC, have been further refined to enhance text classification, often incorporating domain-specific knowledge and auxiliary sentences to improve their effectiveness in specific tasks [7]. These advancements have led to significant improvements in various NLP applications, including aspect-based sentiment analysis and question answering [8].
+
+Several studies have compared the performance of traditional and deep learning-based text classification methods. A comprehensive review of over 150 deep learning models highlighted their superior performance over classical approaches in tasks such as sentiment analysis, news categorization, and question answering [9]. Another study specifically compared the TF-IDF and Word2Vec models, concluding that TF-IDF combined with SVM achieved higher accuracy in emotion text classification [2].
+
 \section{Methodology}
 In this section, we begin by presenting the dataset employed in our experiments, followed by an overview of our project's experimental design.
 
@@ -693,8 +709,30 @@ The conclusion goes here.
 
 The authors would like to thank...
 
-\bibliography{bib}
-\bibliographystyle{IEEEtran}
+\begin{thebibliography}{1}
+
+\bibitem{IEEEhowto:naik}
+P. Naik, S. A. S., and V. Kuri, \emph{"Classification of posts on Reddit,"} Graduate Student, CSE Dept, UCSD, CA, USA, 2021
+\bibitem{IEEEhowto:cahyani}
+D. E. Cahyani and I. Patasik, \emph{"Performance comparison of TF-IDF and Word2Vec models for emotion text classification,"}, Bulletin of Electrical Engineering and Informatics, vol. 10, no. 5, pp. 2780-2788, 2021.
+\bibitem{IEEEhowto:luan}
+Y. Luan and S. Lin, \emph{"Research on Text Classification Based on CNN and LSTM,"} IEEE International Conference on Artificial Intelligence and Computer Applications, 2019.
+\bibitem{IEEEhowto:sun}
+Y. Sun, L. Wang, Y. Li, S. Feng, H. Tian, and J. Wu, \emph{"Improving BERT-Based Text Classification with Auxiliary Sentences,"} IEEE Access, vol. 8, pp. 191563-191574, 2020.
+\bibitem{IEEEhowto:kingma}
+D. P. Kingma and J. Ba, \emph{"Text Classification Using Long Short-Term Memory (LSTM),"} ArXiv arXiv:1406.2661, 2014.
+\bibitem{IEEEhowto:joulin}
+A. Joulin, E. Grave, P. Bojanowski, and T. Mikolov, \emph{"Bag of Tricks for Efficient Text Classification,"} in Proceedings of the 15th Conference of the European Chapter of the Association for Computational Linguistics: Volume 2, Short Papers, pp. 427-431, 2017.
+\bibitem{IEEEhowto:milad}
+Milad Moradi, Georg Dorffner, Matthias Samwald,
+\emph{"Deep contextualized embeddings for quantifying the informative content in biomedical text summarization"},Computer Methods and Programs in Biomedicine, Volume 184,2020,105117,ISSN 0169-2607,
+\bibitem{IEEEhowto:zhang}
+X. Zhang, J. Zhao, and Y. LeCun, \emph{"Character-level Convolutional Networks for Text Classification,"} in Advances in Neural Information Processing Systems, pp. 649-657, 2015
+\bibitem{IEEEhowto:minaee}
+Minaee, S., Kalchbrenner, N., Cambria, E., Nikzad, N., Chenaghlu, M., and  Gao, J. (2021). \emph{"Deep learning--based text classification: a comprehensive review."}, ACM computing surveys (CSUR), 54(3), 1-40.
+
+
+\end{thebibliography}
 
 
 
