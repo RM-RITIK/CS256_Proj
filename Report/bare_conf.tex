@@ -340,12 +340,12 @@
 \author{\IEEEauthorblockN{Ritik Mehta}
 \IEEEauthorblockA{Department of Computer Science \\
 San Jose State Uninversity\\
-Email: ritik.mehta@sjsu.edu}
+ritik.mehta@sjsu.edu}
 \and
 \IEEEauthorblockN{Ikbal Singh Dhanjal}
 \IEEEauthorblockA{Department of Computer Science\\
 San Jose State Uninversity\\
-Email: ikbalsinghgurdevsingh.dhanjal@sjsu.edu}
+ikbalsinghgurdevsingh.dhanjal@sjsu.edu}
 \and
 \IEEEauthorblockN{James Kirk\\ and Montgomery Scott}
 \IEEEauthorblockA{Starfleet Academy\\
@@ -390,7 +390,7 @@ Fax: (888) 555--1212}}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-The abstract goes here.
+  Reddit, a prominent social media platform hosts a diverse array of discussions across numerous subreddits. The users are required to add a flair or genre when creating a post. This paper performs classification of self-posts into different flairs which can be used for automatically flairing posts. It reduces the problem into a text classification problem and explores the effectiveness of various models including Logistic Regression, Random Forest, Long Short-Term Memory (LSTM) networkss, and LSTM-Convolutional Neural Network (CNN-LSTM) hybrids. Our experiments involve utilizing different word embeddings such as TF-IDF, Word2Vec, and BERT, to capture semantic features for classification. We evaluate the performance of these models on Reddit dataset using accuracy. 
 \end{abstract}
 
 % no keywords
@@ -695,6 +695,16 @@ Word2Vec + LSTM-CNN & 47.21\% \\
 \end{figure}
 
 \section{Discussion}
+
+The results section presents a comprehensive analysis of various machine learning models applied to the dataset. In this section, we will focus on interpreting these results, comparing different models, addressing limitations, and challenges observed during the training.
+
+Starting with Logistic Regression, the TF-IDF approach yielded the highest accuracy among the models discussed, reaching 68.79\%. This result is notable and suggests that the TF-IDF technique effectively captured the features necessary for classification in this context. However, it's crucial to delve deeper into why Word2Vec and BERT did not perform as well in this scenario, as understanding these nuances can inform future model selection. One of the possible reasons for Word2Vec is that we did not fine-tune Word2Vec along with pre-trained weights. The paper uses the Word2Vec architecture and retrains it on the dataset corpus. 
+
+Moving on to Random Forest, TF-IDF again showed the highest accuracy, although notably lower than Logistic Regression at 45.58\%. This discrepancy between the two algorithms raises questions about the dataset's characteristics and how different models handle its complexities.
+
+The LSTM model achieved a respectable accuracy of 59.09\% with TF-IDF vectors, showcasing the strength of sequence modeling in this task. BERT, despite its pre-training on large corpora, fell slightly short of TF-IDF in the LSTM context. This is likely because when computing the sentence embeddings, we average the embeddings for each word to compute the sentence embedding. This may cause to lose the internal context between words in the sentence.
+
+The LSTM-CNN hybrid model, particularly with BERT embeddings, demonstrated the highest accuracy at 61.53\%. It's interesting to see that a powerful architecture LSTM-CNN and a powerful embedding like BERT produces lower accuracy than a simple Logistic Regression with TF-IDF. We believe that it is because of the smaller corpus in the sampled dataset. These models should be able to exploit their explanatory power as we increase the dataset size and fine-tune using pre-trained weights for both Word2Vec and BERT.
 
 \section{Conclusion}
 The conclusion goes here.
