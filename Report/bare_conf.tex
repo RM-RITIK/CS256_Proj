@@ -707,7 +707,12 @@ The LSTM model achieved a respectable accuracy of 59.09\% with TF-IDF vectors, s
 The LSTM-CNN hybrid model, particularly with BERT embeddings, demonstrated the highest accuracy at 61.53\%. It's interesting to see that a powerful architecture LSTM-CNN and a powerful embedding like BERT produces lower accuracy than a simple Logistic Regression with TF-IDF. We believe that it is because of the smaller corpus in the sampled dataset. These models should be able to exploit their explanatory power as we increase the dataset size and fine-tune using pre-trained weights for both Word2Vec and BERT.
 
 \section{Conclusion}
-The conclusion goes here.
+
+The text classification project focused on classifying Reddit self-posts into predefined genres, demonstrating the effectiveness of various machine learning and deep learning models. Through extensive experimentation with Logistic Regression, Random Forest, LSTM, and LSTM-CNN, and embeddings like TF-IDF, Word2Vec, and BERT, the project achieved notable results. The highest accuracy was 68.79\%  using TF-IDF vectors with Logistic Regression, underscoring the potential of combining traditional feature extraction techniques with robust classification algorithms.
+
+The findings align with broader research trends, indicating that while traditional methods like TF-IDF with SVM can provide competitive results, modern deep learning approaches, especially those leveraging advanced models like BERT, offer significant improvements in capturing contextual nuances and handling complex text data. The project's methodology and results highlight the importance of selecting appropriate feature extraction methods and model architectures to optimize classification performance.
+
+Future work can focus on expanding the dataset, exploring transfer learning techniques, and developing an auto-flair Reddit bot to automate genre classification. Overcoming computational resource constraints and addressing genre overlap remain critical challenges. Continued advancements in deep learning and NLP hold promise for further enhancing text classification capabilities, making these models more efficient and scalable for real-world applications.
 
 
 
