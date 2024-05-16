@@ -61,7 +61,8 @@
 
 \usepackage{graphicx}
 \usepackage{amsmath,amsthm, amsfonts, amssymb, amsxtra, amsopn}
-\usepackage{booktabs} 
+\usepackage{booktabs}
+\newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}} 
 % Some Computer Society conferences also require the compsoc mode option,
 % but others use the standard conference format.
 %
@@ -341,10 +342,10 @@
 San Jose State Uninversity\\
 Email: ritik.mehta@sjsu.edu}
 \and
-\IEEEauthorblockN{Homer Simpson}
-\IEEEauthorblockA{Twentieth Century Fox\\
-Springfield, USA\\
-Email: homer@thesimpsons.com}
+\IEEEauthorblockN{Ikbal Singh Dhanjal}
+\IEEEauthorblockA{Department of Computer Science\\
+San Jose State Uninversity\\
+Email: ikbalsinghgurdevsingh.dhanjal@sjsu.edu}
 \and
 \IEEEauthorblockN{James Kirk\\ and Montgomery Scott}
 \IEEEauthorblockA{Starfleet Academy\\
@@ -411,23 +412,24 @@ The abstract goes here.
 
 \section{Introduction}
 % no \IEEEPARstart
-This demo file is intended to serve as a ``starter file''
-for IEEE conference papers produced under \LaTeX\ using
-IEEEtran.cls version 1.8b and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
+Reddit is a social media website which combines anonymity with the popularity of the early internet forums. It allows users to create their own subreddits based on a topic and then users can join those subreddits and make posts in the subreddits. In 2019, Reddit beat Twitter in terms of Monthly Active Userbase (MAU) and in 2024, 1 in every 7 humans visit Reddit at-least once a month. These subreddits are moderated by users who are passionate to keep the community going without any financial inventive. One of the roles of the moderators is to effectively manage and curate the posts made by the users in the subreddit. Often times this is achieved by something like "flairs". Flairs are a categorization of posts by a genre. For example, in the subreddit r/help, there are multiple flairs like "Access", "Profile", "Reddit Premium", "Mobile/App", etc. It's expected, while not necessarily mandatory, from the users to add the flair while creating a post. However, many posts are not created with a flair. So the moderators have to either add the flairs themselves or they need to auto-remove the post by using a bot. This causes extra work on moderators and may sometimes impact the productive discussion in the subreddit. 
 
-\hfill mds
+This paper aims to solve the problem of Reddit Self-Post Classification into different genres or flairs. This problem falls under Text Classification in Natural Language Processing. We solve it using Supervised Learning methods. Section \RNum{2} explains the background and a brief literature survey of the state-of-the-art Text Classification models used. Section \RNum{3} proposes the methodology used, including the embeddings and the models. Section \RNum{4} presents the results obtained from training and \RNum{5} outlines the interpretation of the results and challenges. Finally \RNum{6} concludes with the future scope and possible improvements which can be made to the work. 
+
+% % You must have at least 2 lines in the paragraph with the drop letter
+% % (should never be an issue)
+% I wish you the best of success.
+
+% \hfill mds
  
-\hfill August 26, 2015
+% \hfill August 26, 2015
 
-\subsection{Subsection Heading Here}
-Subsection text here.
+% \subsection{Subsection Heading Here}
+% Subsection text here.
 
 
-\subsubsection{Subsubsection Heading Here}
-Subsubsection text here.
+% \subsubsection{Subsubsection Heading Here}
+% Subsubsection text here.
 
 
 % An example of a floating figure using the graphicx package.
